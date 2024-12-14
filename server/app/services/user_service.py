@@ -31,7 +31,7 @@ def generate_token(id, login, role):
         'id': id,
         'login': login,
         'role': role,
-        'exp': datetime.datetime.now(timezone) + datetime.timedelta(hours=1)
+        'exp': datetime.datetime.now(timezone) + datetime.timedelta(hours=48)
     }
     return jwt.encode(payload, secret_key, algorithm=algorithm)
 
@@ -54,7 +54,7 @@ def register(cursor, user):
         ''')
         data = cursor.fetchone()
         token = generate_token(data[0], data[1], data[2])
-        return {"id": data[0], "login": data[1], "role": data[3], "token": token}
+        return {"id": data[0], "login": data[1], "role": data[2], "token": token}
     except Exception as e:
         return {"success": False, "message": str(e)}
 
@@ -76,3 +76,32 @@ def login(cursor, user):
         return {"success": False, "message": "Неправильный логин или пароль"}
     except Exception as e:
         return {"success": False, "message": "Неправильный логин или пароль"}
+    
+
+@connect 
+def profile(cursor, userId):
+    cursor.execute(f'''
+        SELECT u.id, login, post_count, join_date, private, 
+		bio, email, telephone, subscribers_number,
+		subscriptions_number 
+        FROM users u
+        JOIN profiles p
+        on p.userId=u.Id
+        WHERE u.id={userId};
+    ''')
+    columns = [desc[0] for desc in cursor.description]
+    rows = cursor.fetchone()
+    return dict(zip(columns, rows))
+
+
+@connect
+def update_profile(cursor, profile, userId):
+    try:
+        cursor.execute('''
+            UPDATE profiles
+            SET bio=%s, telephone=%s, email=%s
+            WHERE userId=%s
+        ''', (profile.bio, profile.telephone, profile.email, userId))
+        return {"success": True}
+    except Exception as e:
+        return {"success": False, "message": str(e)}

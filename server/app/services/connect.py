@@ -1,5 +1,6 @@
 import psycopg2
 
+
 def connect(func):
     def wrapper(*args, **kwargs):
         conn_params = {

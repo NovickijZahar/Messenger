@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Context } from "..";
 import { useLocation, Link } from "react-router-dom";
-import { LOGIN_ROUTE, MAIN_ROUTE, REGISTER_ROUTE } from "../consts";
+import { LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE } from "../consts";
 import * as auth from "../http/userApi";
 
 
@@ -25,7 +25,7 @@ const Auth = () => {
                 data = await auth.register(login, password);
             }
             user.setUser(data);
-            window.location.href = MAIN_ROUTE;
+            window.location.href = PROFILE_ROUTE;
         }
         catch (err) {
             alert(err.response);

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE } from "../consts";
+import { LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE, USERS_ROUTE } from "../consts";
 import { observer } from 'mobx-react-lite';
 import { useContext } from "react";
 import { Context } from "..";
@@ -24,6 +24,11 @@ const NavBar = observer(() => {
                 </Link>
                 {user.isAuth ?
                 <ul className="navbar-menu">
+                    <li>
+                        <Link to={USERS_ROUTE} className="navbar-logo">
+                            Пользователи
+                        </Link>
+                    </li>
                     <li>
                         <Link to={PROFILE_ROUTE} className="navbar-logo">
                             {user.user.login}
